@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 h-screen flex flex-col justify-center items-center">
+    <h1 class="text-3xl font-bold mb-8">Photo Gallery</h1>
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data" class="flex flex-col items-center">
+        <input type="file" name="image" class="border border-gray-300 px-4 py-2 rounded-lg mb-4">
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Upload</button>
+    </form>
+    <a href="/gallery" class="mt-4 text-blue-500 hover:underline">View Gallery</a>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert('Upload failed: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Upload failed: Internal Server Error');
+            }
+        });
+    </script>
+</body>
+</html>
